@@ -16,6 +16,14 @@ import { join } from 'node:path';
 const REVIEW =
   "5/5 — Comes with unlimited side quests, zero tolerance for 'I can't,' and a superpower for spotting the one thing I hoped she'd never notice.";
 
+// Guard the gate's rules in the program itself: the review must
+// be a single line of at most 200 characters, so a future edit
+// that breaks either rule fails loudly here instead of being
+// scored invalid by the sealed gate.
+if (REVIEW.includes('\n') || REVIEW.length > 200) {
+  throw new Error(`review must be one line of at most 200 chars (got ${REVIEW.length})`);
+}
+
 const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, 'entry.txt'), REVIEW, 'utf8');
